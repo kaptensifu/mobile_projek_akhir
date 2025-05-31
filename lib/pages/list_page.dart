@@ -137,7 +137,7 @@ class _ListPageState extends State<ListPage> implements DriverView {
       appBar: AppBar(
         backgroundColor: Colors.red[700],
         title: const Text(
-          'F1 Drivers',
+          'Formula 1',
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         actions: [
@@ -424,21 +424,46 @@ class _ListPageState extends State<ListPage> implements DriverView {
                               horizontal: 4,
                               vertical: 4,
                             ),
-                            child: Card(
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => DetailPage(
+                                          id: team.teamId, // Adjust ID property for circuit
+                                          endpoint: _currentEndpoint,
+                                        ),
+                                  ),
+                                );
+                              },
+                              child: Card(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               elevation: 4,
                               child: Padding(
                                 padding: const EdgeInsets.all(16),
-                                child: Text(
-                                  team.teamName,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        team.teamName,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    const Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 16,
+                                      color: Colors.grey,
+                                    ),
+                                  ],
                                 ),
                               ),
+                            ),
                             ),
                           );
                         }
