@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projek_akhir/pages/home_page.dart';
+import 'package:projek_akhir/auth/auth_wrapper.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Formula 1 App',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -31,7 +32,12 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const HomePage(),
+      home: AuthWrapper(
+        child: HomePage(), 
+      ),
+      routes: {
+        '/home': (context) => AuthWrapper(child: HomePage()),
+      },
     );
   }
 }

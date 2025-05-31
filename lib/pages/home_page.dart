@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projek_akhir/pages/list_page.dart';
-
+import 'package:projek_akhir/auth/session_manager.dart';
+import 'package:projek_akhir/pages/login_page.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -10,6 +11,94 @@ class HomePage extends StatefulWidget {
 
 //Navigation bar dengan 3 Pages
 class _HomePageState extends State<HomePage> {
+
+Future<void> _handleLogout() async {
+  // Tampilkan dialog konfirmasi
+  final shouldLogout = await showDialog<bool>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Konfirmasi Logout'),
+        content: const Text('Apakah Anda yakin ingin keluar dari aplikasi?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text(
+              'Logout',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+
+  // Jika user mengkonfirmasi logout
+  if (shouldLogout == true) {
+    try {
+      // Tampilkan loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+
+      // Lakukan logout
+      final sessionManager = await SessionManager.getInstance();
+      final logoutSuccess = await sessionManager.logout();
+
+      // Tutup loading dialog
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+
+      if (logoutSuccess) {
+        // Logout berhasil, navigasi ke login page dan hapus semua route sebelumnya
+        if (mounted) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const LoginPage()),
+            (Route<dynamic> route) => false,
+          );
+        }
+      } else {
+        // Logout gagal, tampilkan pesan error
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Gagal melakukan logout. Silakan coba lagi.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      // Tutup loading dialog jika masih terbuka
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+      
+      // Tampilkan pesan error
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Terjadi kesalahan: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      
+      print('Error during logout: $e');
+    }
+  }
+}
 
   int _selectedIndex = 0;
 
@@ -25,14 +114,7 @@ class _HomePageState extends State<HomePage> {
     // const BantuanPage(),
   ];
 
-  // Future<void> _signOut() async {
-  //   await FirebaseAuth.instance.signOut();
-  //   if (!mounted) return;
-  //   Navigator.pushReplacement(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => const Mainlogin()),
-  //   );
-  // }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +140,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       ElevatedButton.icon(
                         onPressed: () {
-                          // _signOut();
-                          // Implement sign out functionality here
+                          _handleLogout();                          
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red.shade600,
@@ -78,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                           size: 20,
                         ),
                         label: const Text(
-                          "Sign Out",
+                          "Logout",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
