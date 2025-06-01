@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:projek_akhir/pages/list_page.dart';
 import 'package:projek_akhir/auth/session_manager.dart';
 import 'package:projek_akhir/pages/login_page.dart';
+import 'package:projek_akhir/pages/competition_page.dart'; 
+
 class HomePage extends StatefulWidget {
+  
   const HomePage({super.key});
 
   @override
@@ -11,6 +14,7 @@ class HomePage extends StatefulWidget {
 
 //Navigation bar dengan 3 Pages
 class _HomePageState extends State<HomePage> {
+late int currentUserId = 1;
 
 Future<void> _handleLogout() async {
   // Tampilkan dialog konfirmasi
@@ -123,7 +127,7 @@ Future<void> _handleLogout() async {
           _selectedIndex == 0
               ? AppBar(
                 backgroundColor: Colors.greenAccent.shade700,
-                elevation: 2,
+                elevation: 1,
                 titleSpacing: 0,
                 title: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -196,7 +200,7 @@ class HomePageContent extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(24),
       child: GridView.count(
-        crossAxisCount: 1,
+        crossAxisCount: 2,
         crossAxisSpacing: 20,
         mainAxisSpacing: 20,
         children: [
@@ -207,7 +211,13 @@ class HomePageContent extends StatelessWidget {
             Colors.blue,
             const ListPage(),
           ),
-          
+          _buildMenuItem(
+            context,
+            'Competition',
+            Icons.timer,
+            const Color.fromARGB(255, 243, 135, 33),
+            const CompetitionPage(currentUserId: 1),
+          ),
         ],
       ),
     );

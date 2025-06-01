@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:projek_akhir/pages/home_page.dart';
 import 'package:projek_akhir/auth/auth_wrapper.dart';
+import 'package:projek_akhir/services/database_helper.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Reset database saat development
+  // await resetDatabaseForDevelopment();
+
   runApp(const MyApp());
+}
+
+Future<void> resetDatabaseForDevelopment() async {
+  final dbHelper = DatabaseHelper();
+  await dbHelper.resetDatabase();
+  print('Database has been reset');
 }
 
 class MyApp extends StatelessWidget {
