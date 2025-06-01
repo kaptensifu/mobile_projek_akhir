@@ -4,6 +4,7 @@ class User {
   final String email;
   final String passwordHash;
   final String? favoriteDriverId;
+  final String? profileImage;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -13,6 +14,7 @@ class User {
     required this.email,
     required this.passwordHash,
     this.favoriteDriverId,
+    this.profileImage,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -24,6 +26,7 @@ class User {
       'email': email,
       'password_hash': passwordHash,
       'favorite_driver_id': favoriteDriverId,
+      'profile_image': profileImage,
       'created_at': createdAt.millisecondsSinceEpoch,
       'updated_at': updatedAt.millisecondsSinceEpoch,
     };
@@ -36,6 +39,7 @@ class User {
       email: map['email'],
       passwordHash: map['password_hash'],
       favoriteDriverId: map['favorite_driver_id'],
+      profileImage: map['profile_image'],
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['created_at']),
       updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updated_at']),
     );
@@ -47,6 +51,7 @@ class User {
     String? email,
     String? passwordHash,
     String? favoriteDriverId,
+    String? profileImage,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -56,6 +61,7 @@ class User {
       email: email ?? this.email,
       passwordHash: passwordHash ?? this.passwordHash,
       favoriteDriverId: favoriteDriverId ?? this.favoriteDriverId,
+      profileImage: profileImage ?? this.profileImage,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

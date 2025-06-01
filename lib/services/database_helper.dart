@@ -27,7 +27,7 @@ class DatabaseHelper {
     
     return await openDatabase(
       path,
-      version: 2,
+      version: 3, // Increment version to trigger upgrade
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -43,6 +43,7 @@ class DatabaseHelper {
         email TEXT UNIQUE NOT NULL,
         password_hash TEXT NOT NULL,
         favorite_driver_id TEXT,
+        profile_image TEXT,
         created_at INTEGER NOT NULL,
         updated_at INTEGER NOT NULL
       )
@@ -69,19 +70,14 @@ class DatabaseHelper {
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     print('Upgrading database from version $oldVersion to $newVersion');
     
-    if (oldVersion < 2) {
-      // For major schema changes, it's easier to recreate the table
-      print('Major schema change detected, recreating competitions table...');
-      
-      // Create backup of existing data if needed
+    if (oldVersion < 3) {
+      // Previous upgrade logic for competitions table
       try {
         List<Map<String, dynamic>> existingData = await db.query('competitions');
         print('Found ${existingData.length} existing competitions');
         
-        // Drop old table
         await db.execute('DROP TABLE IF EXISTS competitions');
         
-        // Create new table with correct schema
         await db.execute('''
           CREATE TABLE competitions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -97,15 +93,13 @@ class DatabaseHelper {
           )
         ''');
         
-        // If you want to migrate existing data, you can do it here
-        // Note: This assumes your old data has compatible fields
         for (var competition in existingData) {
           try {
             await db.insert('competitions', {
               'title': competition['title'] ?? 'Migrated Competition',
               'description': competition['description'],
-              'circuit_id': 'unknown', // Default value for new field
-              'circuit_name': 'Unknown Circuit', // Default value for new field
+              'circuit_id': 'unknown',
+              'circuit_name': 'Unknown Circuit',
               'start_time': competition['created_at'] ?? DateTime.now().millisecondsSinceEpoch,
               'created_by': competition['created_by'] ?? 1,
               'created_at': competition['created_at'] ?? DateTime.now().millisecondsSinceEpoch,
@@ -116,11 +110,8 @@ class DatabaseHelper {
           }
         }
         
-        print('Database upgrade completed successfully');
-        
       } catch (e) {
         print('Error during database upgrade: $e');
-        // If migration fails, just create the new table
         await db.execute('DROP TABLE IF EXISTS competitions');
         await db.execute('''
           CREATE TABLE competitions (
@@ -136,6 +127,16 @@ class DatabaseHelper {
             FOREIGN KEY (created_by) REFERENCES users (id)
           )
         ''');
+      }
+    }
+    
+    if (oldVersion < 3) {
+      // Add profile_image column to users table
+      try {
+        await db.execute('ALTER TABLE users ADD COLUMN profile_image TEXT');
+        print('Added profile_image column to users table');
+      } catch (e) {
+        print('Error adding profile_image column: $e');
       }
     }
   }
@@ -257,14 +258,35 @@ class DatabaseHelper {
     }
   }
 
-  Future<bool> updateFavoriteDriver(int userId, String driverId) async {
+  Future<bool> updateFavoriteDriver(int userId, String? driverId) async {
+  final db = await database;
+  
+  try {
+    final result = await db.update(
+      'users',
+      {
+        'favorite_driver_id': driverId?.isEmpty == true ? null : driverId,
+        'updated_at': DateTime.now().millisecondsSinceEpoch,
+      },
+      where: 'id = ?',
+      whereArgs: [userId],
+    );
+    
+    return result > 0;
+  } catch (e) {
+    print('Error updating favorite driver: $e');
+    return false;
+  }
+}
+
+  Future<bool> updateProfileImage(int userId, String imagePath) async {
     final db = await database;
     
     try {
       final result = await db.update(
         'users',
         {
-          'favorite_driver_id': driverId,
+          'profile_image': imagePath,
           'updated_at': DateTime.now().millisecondsSinceEpoch,
         },
         where: 'id = ?',
@@ -273,7 +295,38 @@ class DatabaseHelper {
       
       return result > 0;
     } catch (e) {
-      print('Error updating favorite driver: $e');
+      print('Error updating profile image: $e');
+      return false;
+    }
+  }
+
+  Future<bool> updateUserProfile({
+    required int userId,
+    String? username,
+    String? email,
+    String? profileImage,
+  }) async {
+    final db = await database;
+    
+    try {
+      Map<String, dynamic> updates = {
+        'updated_at': DateTime.now().millisecondsSinceEpoch,
+      };
+      
+      if (username != null) updates['username'] = username;
+      if (email != null) updates['email'] = email;
+      if (profileImage != null) updates['profile_image'] = profileImage;
+      
+      final result = await db.update(
+        'users',
+        updates,
+        where: 'id = ?',
+        whereArgs: [userId],
+      );
+      
+      return result > 0;
+    } catch (e) {
+      print('Error updating user profile: $e');
       return false;
     }
   }
@@ -312,7 +365,7 @@ class DatabaseHelper {
     }
   }
 
-  // Competition operations
+  // Competition operations (unchanged)
   Future<Competition?> createCompetition({
     required String title,
     String? description,
@@ -325,9 +378,6 @@ class DatabaseHelper {
     
     try {
       final now = DateTime.now();
-      
-      // Debug: Check table structure before insert
-      await checkDatabaseStructure();
       
       final id = await db.insert('competitions', {
         'title': title,

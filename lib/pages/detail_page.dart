@@ -3,7 +3,10 @@ import 'package:projek_akhir/models/circuit_model.dart';
 import 'package:projek_akhir/models/team_model.dart';
 import 'package:projek_akhir/models/driver_model.dart';
 import 'package:projek_akhir/presenters/f1_presenter.dart';
+import 'package:projek_akhir/services/database_helper.dart';
+import 'package:projek_akhir/models/user_model.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailPage extends StatefulWidget {
   final String id;
@@ -21,12 +24,18 @@ class _DetailPageState extends State<DetailPage> implements DriverView {
   Circuit? _circuit;
   Team? _team;
   String? _errorMessage;
+  
+  // New variables for favorite driver feature
+  bool _isFavorite = false;
+  bool _isUpdatingFavorite = false;
+  User? _currentUser;
 
   @override
   void initState() {
     super.initState();
     _presenter = DriverPresenter(this);
     _loadDetailData();
+    _loadCurrentUser();
   }
 
   void _loadDetailData() {
@@ -38,6 +47,83 @@ class _DetailPageState extends State<DetailPage> implements DriverView {
       _presenter.loadTeamData(widget.endpoint);
     }
   }
+
+  Future<void> _loadCurrentUser() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getInt('user_id');
+      
+      if (userId != null) {
+        final user = await DatabaseHelper().getUserById(userId);
+        setState(() {
+          _currentUser = user;
+          if (widget.endpoint == 'current/drivers' && user?.favoriteDriverId == widget.id) {
+            _isFavorite = true;
+          }
+        });
+      }
+    } catch (e) {
+      print('Error loading current user: $e');
+    }
+  }
+
+  Future<void> _toggleFavoriteDriver() async {
+  if (_currentUser == null || _driver == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please login to set favorite driver')),
+    );
+    return;
+  }
+
+  setState(() {
+    _isUpdatingFavorite = true;
+  });
+
+  try {
+    final newFavoriteId = _isFavorite ? null : _driver!.driverId;
+    final success = await DatabaseHelper().updateFavoriteDriver(
+      _currentUser!.id!,
+      newFavoriteId, // Remove the ?? '' part
+    );
+
+    if (success) {
+      setState(() {
+        _isFavorite = !_isFavorite;
+        _currentUser = _currentUser!.copyWith(
+          favoriteDriverId: newFavoriteId,
+        );
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_isFavorite 
+            ? 'Added ${_driver!.fullName} to favorites' 
+            : 'Removed ${_driver!.fullName} from favorites'),
+          backgroundColor: _isFavorite ? Colors.green : Colors.orange,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to update favorite driver'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  } catch (e) {
+    print('Error updating favorite driver: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Error updating favorite driver'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  } finally {
+    setState(() {
+      _isUpdatingFavorite = false;
+    });
+  }
+}
 
   @override
   void hideLoading() {
@@ -54,6 +140,11 @@ class _DetailPageState extends State<DetailPage> implements DriverView {
         orElse: () => driverList.first,
       );
       _errorMessage = null;
+      
+      // Check if this driver is favorite after loading
+      if (_currentUser?.favoriteDriverId == _driver?.driverId) {
+        _isFavorite = true;
+      }
     });
   }
 
@@ -238,6 +329,36 @@ class _DetailPageState extends State<DetailPage> implements DriverView {
             ),
           ),
           const SizedBox(height: 16),
+          
+          // Favorite Button
+          if (_currentUser != null) ...[
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: _isUpdatingFavorite ? null : _toggleFavoriteDriver,
+                icon: _isUpdatingFavorite
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
+                label: Text(_isFavorite ? 'Already Favorites' : 'Add to Favorites'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _isFavorite ? Colors.green[700] : Colors.red[700],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
           
           // Details Section
           Text(

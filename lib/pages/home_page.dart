@@ -3,6 +3,7 @@ import 'package:projek_akhir/pages/list_page.dart';
 import 'package:projek_akhir/auth/session_manager.dart';
 import 'package:projek_akhir/pages/login_page.dart';
 import 'package:projek_akhir/pages/competition_page.dart'; 
+import 'package:projek_akhir/pages/profile_page.dart';
 
 class HomePage extends StatefulWidget {
   
@@ -15,6 +16,7 @@ class HomePage extends StatefulWidget {
 //Navigation bar dengan 3 Pages
 class _HomePageState extends State<HomePage> {
 late int currentUserId = 1;
+
 
 Future<void> _handleLogout() async {
   // Tampilkan dialog konfirmasi
@@ -114,7 +116,8 @@ Future<void> _handleLogout() async {
 
   final List<Widget> _pages = [
     const HomePageContent(),
-    // const DaftarAnggotaPage(),
+    const ProfilePage(),
+    
     // const BantuanPage(),
   ];
 
@@ -182,8 +185,8 @@ Future<void> _handleLogout() async {
         backgroundColor: Colors.amber.shade50,
         elevation: 10,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
-          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Anggota'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Profile'),
           BottomNavigationBarItem(icon: Icon(Icons.help), label: 'Bantuan'),
         ],
       ),
