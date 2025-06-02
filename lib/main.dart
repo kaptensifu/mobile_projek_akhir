@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projek_akhir/pages/home_page.dart';
+import 'package:projek_akhir/pages/login_page.dart';
 import 'package:projek_akhir/auth/auth_wrapper.dart';
 import 'package:projek_akhir/services/database_helper.dart';
 
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/home': (context) => AuthWrapper(child: HomePage()),
+        '/login': (context) => LoginPage(),
       },
     );
   }
