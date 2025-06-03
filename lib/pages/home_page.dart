@@ -210,7 +210,7 @@ class HomePageContent extends StatelessWidget {
           _buildMenuItem(
             context,
             'List Data',
-            Icons.timer,
+            Icons.list,
             Colors.blue,
             const ListPage(),
           ),
