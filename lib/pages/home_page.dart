@@ -5,6 +5,7 @@ import 'package:projek_akhir/pages/login_page.dart';
 import 'package:projek_akhir/pages/competition_page.dart';
 import 'package:projek_akhir/pages/maps_page.dart'; 
 import 'package:projek_akhir/pages/profile_page.dart';
+import 'package:projek_akhir/pages/saran_page.dart';
 
 class HomePage extends StatefulWidget {
   
@@ -118,8 +119,7 @@ Future<void> _handleLogout() async {
   final List<Widget> _pages = [
     const HomePageContent(),
     const ProfilePage(),
-    
-    // const BantuanPage(),
+    const SaranPage(),
   ];
 
   
@@ -188,7 +188,7 @@ Future<void> _handleLogout() async {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Profile'),
-          BottomNavigationBarItem(icon: Icon(Icons.help), label: 'Bantuan'),
+          BottomNavigationBarItem(icon: Icon(Icons.help), label: 'Saran & Kesan'),
         ],
       ),
     );
