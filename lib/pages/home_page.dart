@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:projek_akhir/pages/list_page.dart';
 import 'package:projek_akhir/auth/session_manager.dart';
 import 'package:projek_akhir/pages/login_page.dart';
-import 'package:projek_akhir/pages/competition_page.dart'; 
+import 'package:projek_akhir/pages/competition_page.dart';
+import 'package:projek_akhir/pages/maps_page.dart'; 
 import 'package:projek_akhir/pages/profile_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -220,6 +221,13 @@ class HomePageContent extends StatelessWidget {
             Icons.timer,
             const Color.fromARGB(255, 243, 135, 33),
             const CompetitionPage(currentUserId: 1),
+          ),
+          _buildMenuItem(
+            context,
+            'Maps',
+            Icons.map,
+            const Color.fromARGB(255, 37, 247, 132),
+            const SimpleMapsPage(),
           ),
         ],
       ),
