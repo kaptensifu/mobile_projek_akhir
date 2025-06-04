@@ -11,12 +11,13 @@ android {
     ndkVersion = "27.0.12077973"
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true // Correct syntax for Kotlin DSL
+        sourceCompatibility = JavaVersion.VERSION_1_8 // Correct syntax for Kotlin DSL
+        targetCompatibility = JavaVersion.VERSION_1_8 // Correct syntax for Kotlin DSL
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = "1.8" // Use double quotes for string literals
     }
 
     defaultConfig {
@@ -37,6 +38,12 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+}
+
+dependencies {
+    // ... other dependencies
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 }
 
 flutter {
