@@ -4,6 +4,8 @@ import 'package:projek_akhir/models/driver_model.dart';
 import 'package:projek_akhir/models/team_model.dart';
 import 'package:projek_akhir/services/database_helper.dart';
 import 'package:projek_akhir/presenters/f1_presenter.dart';
+import 'package:timezone/data/latest.dart' as tz; // Import timezone data
+import 'package:timezone/timezone.dart' as tz; // Import timezone core functionality
 
 class AddCompetitionPage extends StatefulWidget {
   final int currentUserId;
@@ -30,9 +32,25 @@ class _AddCompetitionPageState extends State<AddCompetitionPage> implements Driv
   bool _isLoadingCircuits = true;
   bool _isSaving = false;
 
+  // Timezone locations
+  late final tz.Location _wibLocation;
+  late final tz.Location _witaLocation;
+  late final tz.Location _witLocation;
+  late final tz.Location _londonLocation;
+  late final tz.Location _usaLocation; // Using New York as a representative for USA
+
   @override
   void initState() {
     super.initState();
+    tz.initializeTimeZones(); // Initialize timezone data
+
+    // Get specific timezone locations
+    _wibLocation = tz.getLocation('Asia/Jakarta');
+    _witaLocation = tz.getLocation('Asia/Makassar');
+    _witLocation = tz.getLocation('Asia/Jayapura');
+    _londonLocation = tz.getLocation('Europe/London');
+    _usaLocation = tz.getLocation('America/New_York');
+
     _presenter = DriverPresenter(this);
     _presenter.loadCircuitData('circuits');
   }
@@ -179,8 +197,43 @@ class _AddCompetitionPageState extends State<AddCompetitionPage> implements Driv
     }
   }
 
+  // Helper function to format DateTime (reused for TZDateTime)
   String _formatDateTime(DateTime dateTime) {
     return '${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}/${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+  }
+
+  // Function to convert and format time to a specific timezone
+  String _convertTimeToTimezone(DateTime dateTime, tz.Location location) {
+    // Convert the local DateTime to a TZDateTime in the specified location
+    // TZDateTime.from assumes the input DateTime is in the local system timezone
+    // if it's a non-UTC DateTime, which is what we get from Date/Time pickers.
+    final tz.TZDateTime tzDateTime = tz.TZDateTime.from(dateTime, location);
+    return _formatDateTime(tzDateTime);
+  }
+
+  // Widget to build a single row for timezone display
+  Widget _buildTimezoneRow(String label, tz.Location location) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              '$label:',
+              style: const TextStyle(fontWeight: FontWeight.w400),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              _convertTimeToTimezone(_selectedDateTime, location),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -331,6 +384,21 @@ class _AddCompetitionPageState extends State<AddCompetitionPage> implements Driv
                               ),
                       ),
                     ),
+                    // New section for time conversion
+                    const SizedBox(height: 32),
+                    const Text(
+                      'Competition Time in Other Timezones:',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    _buildTimezoneRow('WIB (Jakarta)', _wibLocation),
+                    _buildTimezoneRow('WITA (Makassar)', _witaLocation),
+                    _buildTimezoneRow('WIT (Jayapura)', _witLocation),
+                    _buildTimezoneRow('London', _londonLocation),
+                    _buildTimezoneRow('USA (New York)', _usaLocation),
                   ],
                 ),
               ),
