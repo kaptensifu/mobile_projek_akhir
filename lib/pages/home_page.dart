@@ -7,6 +7,7 @@ import 'package:projek_akhir/pages/maps_page.dart';
 import 'package:projek_akhir/pages/profile_page.dart';
 import 'package:projek_akhir/pages/saran_page.dart';
 import 'package:projek_akhir/pages/tiket_page.dart';
+import 'package:projek_akhir/pages/sensor_page.dart';
 
 class HomePage extends StatefulWidget {
   
@@ -236,6 +237,13 @@ class HomePageContent extends StatelessWidget {
             Icons.money,
             const Color.fromARGB(255, 231, 33, 249),
             const TiketPage(),
+          ),
+          _buildMenuItem(
+            context,
+            'Beli Ticket',
+            Icons.wheelchair_pickup_rounded,
+            const Color.fromARGB(255, 249, 33, 33),
+            const SensorPage(),
           ),
         ],
       ),
