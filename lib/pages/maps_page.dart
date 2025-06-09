@@ -283,7 +283,7 @@ class _SimpleMapsPageState extends State<SimpleMapsPage> implements DriverView {
                                 region,
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: Colors.blue[700],
+                                  color: Colors.black,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -439,7 +439,7 @@ class _SimpleMapsPageState extends State<SimpleMapsPage> implements DriverView {
             onPressed: () {
               _mapController.move(_defaultCenter, 4.0);
             },
-            backgroundColor: Colors.blue[700],
+            backgroundColor: Colors.black,
             child: const Icon(Icons.zoom_out_map, color: Colors.white),
           ),
         ],

@@ -316,7 +316,7 @@ class _ProfilePageState extends State<ProfilePage> implements DriverView {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           gradient: LinearGradient(
-            colors: [Colors.blue[700]!, Colors.blue[900]!],
+            colors: [Colors.red[700]!, Colors.red[900]!],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -606,7 +606,7 @@ class _ProfilePageState extends State<ProfilePage> implements DriverView {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue[700],
+        backgroundColor: Colors.red[700],
         title: const Text(
           'Profile',
           style: TextStyle(

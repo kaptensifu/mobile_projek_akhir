@@ -132,7 +132,7 @@ Future<void> _handleLogout() async {
       appBar:
           _selectedIndex == 0
               ? AppBar(
-                backgroundColor: Colors.greenAccent.shade700,
+                backgroundColor: const Color.fromARGB(255, 255, 0, 0), // AppBar hitam
                 elevation: 1,
                 titleSpacing: 0,
                 title: Padding(
@@ -141,7 +141,7 @@ Future<void> _handleLogout() async {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Home Page',
+                        'Formula 1 App', // Mengganti judul
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -153,7 +153,7 @@ Future<void> _handleLogout() async {
                           _handleLogout();                          
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red.shade600,
+                          backgroundColor: Colors.black, // Tombol logout merah gelap
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -170,7 +170,7 @@ Future<void> _handleLogout() async {
                         ),
                         label: const Text(
                           "Logout",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -178,14 +178,24 @@ Future<void> _handleLogout() async {
                 ),
               )
               : null,
-      body: _pages[_selectedIndex],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.red[50]!, Colors.red[700]!],
+          ),
+        ),
+        child: _pages[_selectedIndex],
+      ),
+      // Latar belakang body hitam
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.green.shade700,
-        unselectedItemColor: Colors.grey,
-        backgroundColor: Colors.amber.shade50,
+        selectedItemColor: const Color.fromARGB(255, 255, 13, 0), // Item yang dipilih merah gelap
+        unselectedItemColor: Colors.white, // Item yang tidak dipilih putih
+        backgroundColor: Colors.black, // Background nav bar hitam
         elevation: 10,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
@@ -214,35 +224,35 @@ class HomePageContent extends StatelessWidget {
             context,
             'List Data',
             Icons.list,
-            Colors.blue,
+            Colors.white, // Merah gelap
             const ListPage(),
           ),
           _buildMenuItem(
             context,
             'Competition',
-            Icons.timer,
-            const Color.fromARGB(255, 243, 135, 33),
+            Icons.emoji_events,
+            Colors.black, // Putih
             const CompetitionPage(currentUserId: 1),
           ),
           _buildMenuItem(
             context,
             'Maps',
-            Icons.map,
-            const Color.fromARGB(255, 37, 247, 132),
+            Icons.location_on,
+            Colors.black, // Hitam
             const SimpleMapsPage(),
           ),
           _buildMenuItem(
             context,
             'Beli Ticket',
-            Icons.money,
-            const Color.fromARGB(255, 231, 33, 249),
+            Icons.monetization_on,
+            Colors.white,
             const TiketPage(),
           ),
           _buildMenuItem(
             context,
-            'Beli Ticket',
-            Icons.wheelchair_pickup_rounded,
-            const Color.fromARGB(255, 249, 33, 33),
+            'Sensor',
+            Icons.sports_soccer,
+            Colors.white, // Putih
             const SensorPage(),
           ),
         ],
@@ -276,14 +286,14 @@ class HomePageContent extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 48, color: Colors.white),
+            Icon(icon, size: 48, color: color == Colors.black ? Colors.white : Colors.black), // Warna icon disesuaikan
             const SizedBox(height: 12),
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: color == Colors.black ? Colors.white : Colors.black, // Warna teks disesuaikan
               ),
               textAlign: TextAlign.center,
             ),

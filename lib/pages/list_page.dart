@@ -430,42 +430,9 @@ class _ListPageState extends State<ListPage> implements DriverView {
                                                     maxLines: 1,
                                                     overflow: TextOverflow.ellipsis,
                                                   ),
+                                                  
                                                   const SizedBox(height: 4),
-                                                  Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.flag,
-                                                        size: 16,
-                                                        color: Colors.grey[600],
-                                                      ),
-                                                      const SizedBox(width: 4),
-                                                      Text(
-                                                        driver.nationality,
-                                                        style: TextStyle(
-                                                          fontSize: 14,
-                                                          color: Colors.grey[600],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(height: 4),
-                                                  Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.cake,
-                                                        size: 16,
-                                                        color: Colors.grey[600],
-                                                      ),
-                                                      const SizedBox(width: 4),
-                                                      Text(
-                                                        '${driver.formattedBirthday} ',
-                                                        style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Colors.grey[600],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
+                                                  
                                                   if (driver.number != null) ...[
                                                     const SizedBox(height: 4),
                                                     Container(
@@ -588,6 +555,12 @@ class _ListPageState extends State<ListPage> implements DriverView {
                                         padding: const EdgeInsets.all(16),
                                         child: Row(
                                           children: [
+                                            Icon(
+                                              Icons.group,
+                                              size: 40,
+                                              color: Colors.black,
+                                            ),
+                                            const SizedBox(width: 16),
                                             Expanded(
                                               child: Text(
                                                 team.teamName,

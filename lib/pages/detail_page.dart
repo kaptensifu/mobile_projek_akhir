@@ -373,7 +373,7 @@ class _DetailPageState extends State<DetailPage> implements DriverView {
           
           _buildInfoCard('Nationality', _driver!.nationality, Icons.flag),
           _buildInfoCard('Birthday', _driver!.formattedBirthday, Icons.cake),
-          _buildInfoCard('Age', '${_driver!.age} years old', Icons.person),
+          
           if (_driver!.shortName != null)
             _buildInfoCard('Short Name', _driver!.shortName!, Icons.badge),
           
@@ -418,7 +418,7 @@ class _DetailPageState extends State<DetailPage> implements DriverView {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 gradient: LinearGradient(
-                  colors: [Colors.blue[700]!, Colors.blue[900]!],
+                  colors: [Colors.red[700]!, Colors.red[900]!],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -461,7 +461,7 @@ class _DetailPageState extends State<DetailPage> implements DriverView {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.blue[700],
+              color: Colors.red[700],
             ),
           ),
           const SizedBox(height: 12),
@@ -484,7 +484,7 @@ class _DetailPageState extends State<DetailPage> implements DriverView {
               icon: const Icon(Icons.open_in_new),
               label: const Text('View on Wikipedia'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue[700],
+                backgroundColor: Colors.red[700],
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
@@ -515,7 +515,7 @@ class _DetailPageState extends State<DetailPage> implements DriverView {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 gradient: LinearGradient(
-                  colors: [Colors.green[700]!, Colors.green[900]!],
+                  colors: [Colors.red[700]!, Colors.red[900]!],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -554,7 +554,7 @@ class _DetailPageState extends State<DetailPage> implements DriverView {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.green[700],
+              color: Colors.red[700],
             ),
           ),
           const SizedBox(height: 12),
@@ -577,7 +577,7 @@ class _DetailPageState extends State<DetailPage> implements DriverView {
               icon: const Icon(Icons.open_in_new),
               label: const Text('View on Wikipedia'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green[700],
+                backgroundColor: Colors.red[700],
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
@@ -609,9 +609,9 @@ class _DetailPageState extends State<DetailPage> implements DriverView {
       case 'current/drivers':
         return Colors.red[700]!;
       case 'circuits':
-        return Colors.blue[700]!;
+        return Colors.red[700]!;
       case 'current/teams':
-        return Colors.green[700]!;
+        return Colors.red[700]!;
       default:
         return Colors.red[700]!;
     }

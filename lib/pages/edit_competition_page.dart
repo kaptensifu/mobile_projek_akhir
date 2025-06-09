@@ -113,32 +113,38 @@ class _EditCompetitionPageState extends State<EditCompetitionPage> implements Dr
   }
 
   Future<void> _selectDateTime() async {
-    final date = await showDatePicker(
+  // Alternatif: Izinkan edit tanggal masa lalu untuk kompetisi yang sudah ada
+  final now = DateTime.now();
+  final earliestDate = _selectedDateTime.isBefore(now) 
+      ? _selectedDateTime.subtract(const Duration(days: 30)) // Izinkan 30 hari ke belakang dari tanggal asli
+      : now;
+  
+  final date = await showDatePicker(
+    context: context,
+    initialDate: _selectedDateTime,
+    firstDate: earliestDate,
+    lastDate: now.add(const Duration(days: 365)),
+  );
+
+  if (date != null) {
+    final time = await showTimePicker(
       context: context,
-      initialDate: _selectedDateTime,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
+      initialTime: TimeOfDay.fromDateTime(_selectedDateTime),
     );
 
-    if (date != null) {
-      final time = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(_selectedDateTime),
-      );
-
-      if (time != null) {
-        setState(() {
-          _selectedDateTime = DateTime(
-            date.year,
-            date.month,
-            date.day,
-            time.hour,
-            time.minute,
-          );
-        });
-      }
+    if (time != null) {
+      setState(() {
+        _selectedDateTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          time.hour,
+          time.minute,
+        );
+      });
     }
   }
+}
 
   Future<void> _saveCompetition() async {
     if (!_formKey.currentState!.validate()) {

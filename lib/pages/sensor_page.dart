@@ -110,7 +110,7 @@ class _SensorPageState extends State<SensorPage> {
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [Colors.white, Colors.orange[50]!],
+                      colors: [Colors.white, Colors.blue[50]!],
                     ),
                   ),
                   padding: const EdgeInsets.all(20),
@@ -155,14 +155,14 @@ class _SensorPageState extends State<SensorPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(Icons.sports_motorsports, size: 50, color: Colors.blue[700]),
+                      Icon(Icons.sports_motorsports, size: 50, color: Colors.black),
                       const SizedBox(height: 16),
                       Text(
                         'F1 Driving Simulation',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue[700],
+                          color: Colors.black,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -182,7 +182,7 @@ class _SensorPageState extends State<SensorPage> {
                       Transform.rotate(
                         angle: _simulatedSteeringAngle * (3.1415926535 / 180), // Konversi derajat ke radian
                         child: Icon(
-                          Icons.add_circle_outline_rounded, // Atau icon kemudi jika ada
+                          Icons.sports_soccer, // Atau icon kemudi jika ada
                           size: 80,
                           color: Colors.black,
                         ),
